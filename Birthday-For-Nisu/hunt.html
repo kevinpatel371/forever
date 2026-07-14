@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>The Ring Hunt 💍</title>
+<title>Our Memory Game 💛</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@ body {
     background: radial-gradient(circle at 50% 10%, #fffdf4 0%, #f7eebc 100%);
     font-family: 'Montserrat', sans-serif;
     color: #4a3b32;
-    overflow: hidden;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,6 +47,27 @@ body {
     text-align: center;
 }
 
+/* Progress Indicator Dots */
+.progress-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(177, 142, 64, 0.2);
+    transition: background 0.4s ease, transform 0.4s ease;
+}
+
+.dot.active {
+    background: #b18e40;
+    transform: scale(1.2);
+}
+
 .section-label {
     font-size: 0.75rem;
     font-weight: 600;
@@ -56,7 +77,7 @@ body {
     margin-bottom: 15px;
 }
 
-.final-question {
+.game-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.8rem;
     font-style: italic;
@@ -65,7 +86,7 @@ body {
     margin-bottom: 15px;
 }
 
-p {
+.game-question {
     font-size: 0.95rem;
     line-height: 1.8;
     color: #5d4b40;
@@ -73,113 +94,247 @@ p {
     margin-bottom: 30px;
 }
 
-.response-btn {
-    padding: 12px 35px;
-    border: 1px solid #261c17;
-    background: transparent;
-    border-radius: 30px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #261c17;
-    cursor: pointer;
-    /* Removed transition to make it teleport INSTANTLY without lag */
-    position: relative;
+/* Big Beautiful Tactile Buttons */
+.options-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.firework-particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+.choice-btn {
+    width: 100%;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(177, 142, 64, 0.25);
+    border-radius: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    color: #4a3b32;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.choice-btn:active {
+    transform: scale(0.97);
+    background: #261c17;
+    color: #f7eebc;
+}
+
+/* Shake Fail Animation */
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+.incorrect {
+    animation: shakeError 0.4s ease;
+    border-color: #ef4444 !important;
+    background: #fef2f2 !important;
+    color: #ef4444 !important;
+}
+
+/* Final Screen Letter styling */
+.final-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: #261c17;
+}
+
+.floating-element {
+    position: fixed;
     pointer-events: none;
     z-index: 2;
     opacity: 0;
+    animation: microFloat 8s linear infinite;
 }
 
-@keyframes explode {
-    0% { transform: translate(0, 0) scale(1); opacity: 1; }
-    100% { transform: translate(var(--mx), var(--my)) scale(0.3); opacity: 0; }
+@keyframes microFloat {
+    0% { transform: translateY(105vh) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="section-panel">
-        <div class="section-label">✨ Next Level Unlocked ✨</div>
-        <h2 class="final-question">The Ring Hunt 💍</h2>
-        <p>
-            Since you said yes to forever, there's just one final thing left to do. Catch the button below to claim your ring!
-        </p>
-        
-        <!-- Runaway target button -->
-        <button id="runawayBtn" class="response-btn" style="background: #261c17; color: #f7eebc; z-index: 999; white-space: nowrap;">
-            Find My Ring 💍
-        </button>
+<!-- Hidden continuous Audio loop -->
+<audio id="bgMusic" src="music.mp3" loop></audio>
 
-        <button class="response-btn" style="margin-top: 25px; display: block; width: 100%; font-size: 0.7rem; opacity: 0.5; border: none; background: transparent;" onclick="alert('Look right next to you! The real ring is waiting for you offline ❤️💍')">
-            I give up, just give me a hint 🤷
-        </button>
+<div class="container">
+    <div class="section-panel" id="gamePanel">
+        
+        <!-- Interactive Progress Header -->
+        <div class="progress-container">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+        </div>
+
+        <div class="section-label" id="stageTag">Memory I</div>
+        <h2 class="game-title" id="stageTitle">The Beginning</h2>
+        <p class="game-question" id="stageQuestion">Setting up...</p>
+        
+        <!-- Stack container where answers are rendered -->
+        <div class="options-stack" id="choicesBox"></div>
+
     </div>
 </div>
 
 <script>
-// --- Pure CSS Firecracker Explosion Engine ---
-function launchFirework(originX, originY) {
-    const colors = ['#b18e40', '#ff6b6b', '#ffd166', '#4ecdc4', '#f7eebc', '#ff8787'];
-    const particleCount = 40;
+// --- Music Synchronization ---
+const audio = document.getElementById('bgMusic');
 
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'firework-particle';
-        particle.style.left = originX + 'px';
-        particle.style.top = originY + 'px';
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = 50 + Math.random() * 130;
-        const moveX = Math.cos(angle) * velocity;
-        const moveY = Math.sin(angle) * velocity;
-        
-        particle.style.setProperty('--mx', `${moveX}px`);
-        particle.style.setProperty('--my', `${moveY}px`);
-        particle.style.animation = `explode ${0.8 + Math.random() * 0.8}s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
-        
-        document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 1600);
+window.addEventListener('DOMContentLoaded', () => {
+    const isPlaying = localStorage.getItem('musicPlaying');
+    const savedTime = localStorage.getItem('musicTime');
+    if (isPlaying === 'true') {
+        if (savedTime) audio.currentTime = parseFloat(savedTime);
+        audio.play().catch(() => {});
+    }
+    setupStage();
+});
+
+// Keep recording audio position 
+setInterval(() => {
+    if (!audio.paused) {
+        localStorage.setItem('musicTime', audio.currentTime);
+    }
+}, 500);
+
+// --- 3-Level Game Config ---
+const levels = {
+    1: {
+        tag: "Memory I",
+        title: "The Spark",
+        question: "Where did our digital worlds first collide, sparking our very first conversation?",
+        correct: "Snapchat",
+        choices: ["Instagram", "Snapchat", "WhatsApp", "Through Friends"]
+    },
+    2: {
+        tag: "Memory II",
+        title: "The Nickname",
+        question: "What is the sweet four-letter name I use that always belongs to you?",
+        correct: "Nisu",
+        choices: ["Dear", "Baby", "Nisu", "Love"]
+    },
+    3: {
+        tag: "Memory III",
+        title: "Our Space",
+        question: "No matter where life takes us or what mountains are ahead, where do we belong?",
+        correct: "Together",
+        choices: ["Apart", "Together", "On Facetime", "In separate worlds"]
+    }
+};
+
+let currentLevel = 1;
+
+function setupStage() {
+    const stage = levels[currentLevel];
+    document.getElementById('stageTag').innerText = stage.tag;
+    document.getElementById('stageTitle').innerText = stage.title;
+    document.getElementById('stageQuestion').innerText = stage.question;
+
+    // Set interactive progress dots
+    for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`dot${i}`);
+        if (i <= currentLevel) dot.classList.add('active');
+        else dot.classList.remove('active');
+    }
+
+    const box = document.getElementById('choicesBox');
+    box.innerHTML = '';
+
+    // Render option list dynamically
+    stage.choices.forEach(optionText => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = optionText;
+        btn.onclick = () => checkAnswer(btn, optionText, stage.correct);
+        box.appendChild(btn);
+    });
+}
+
+function checkAnswer(btnElement, selectedOption, correctOption) {
+    if (selectedOption === correctOption) {
+        // Highlight correct option and go to next level
+        btnElement.style.background = '#261c17';
+        btnElement.style.color = '#f7eebc';
+        btnElement.style.borderColor = '#261c17';
+
+        // Trigger floating burst effect on success
+        triggerSmallBurst();
+
+        setTimeout(() => {
+            if (currentLevel < 3) {
+                currentLevel++;
+                setupStage();
+            } else {
+                showEnding();
+            }
+        }, 500);
+    } else {
+        // Apply immediate tactile failure shake 
+        btnElement.classList.add('incorrect');
+        setTimeout(() => btnElement.classList.remove('incorrect'), 400);
     }
 }
 
-// Automatic firecracker bursts on load
-setTimeout(() => launchFirework(window.innerWidth * 0.2, window.innerHeight * 0.25), 200);
-setTimeout(() => launchFirework(window.innerWidth * 0.8, window.innerHeight * 0.20), 500);
-setTimeout(() => launchFirework(window.innerWidth * 0.3, window.innerHeight * 0.75), 900);
-setTimeout(() => launchFirework(window.innerWidth * 0.75, window.innerHeight * 0.80), 1200);
-
-// --- LEVEL UP: Uncatchable Runaway Button Logic ---
-const btn = document.getElementById('runawayBtn');
-
-function moveButton(e) {
-    if (e) e.preventDefault();
+function showEnding() {
+    const panel = document.getElementById('gamePanel');
+    panel.innerHTML = `
+        <div class="section-label" style="margin-bottom: 25px;">Always & Forever 💛</div>
+        <p class="final-letter">
+            You unlocked every single memory.<br><br>
+            Thank you for walking this beautiful path by my side, sharing your smiles, your laughter, and your complete trust.<br><br>
+            I promise to value you, cherish you, and walk right beside you into every tomorrow.<br><br>
+            Happiest 25th Birthday, Nisu. ❤️
+        </p>
+    `;
     
-    // Increased the boundary range so it jumps completely out of reach across the screen
-    const randomX = Math.floor((Math.random() - 0.5) * 260); 
-    const randomY = Math.floor((Math.random() - 0.5) * 240);
-    
-    btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    // Constant grand particle explosion on completion
+    setInterval(triggerGrandExplosion, 400);
 }
 
-// Triggers instantly the absolute millisecond a finger even approaches or skims it
-btn.addEventListener('touchstart', moveButton);
-btn.addEventListener('pointerdown', moveButton);
-btn.addEventListener('mouseover', moveButton);
+// Particle visual effects
+const visualElements = ['💝', '🎀', '❤️', '✨'];
 
-// If she somehow uses reality-bending speed to click it:
-btn.addEventListener('click', function() {
-    alert("Look right next to you! Your real ring is waiting for you offline ❤️💍");
-});
+function triggerSmallBurst() {
+    for (let i = 0; i < 8; i++) {
+        spawnFloatingElement();
+    }
+}
+
+function triggerGrandExplosion() {
+    spawnFloatingElement();
+}
+
+function spawnFloatingElement() {
+    const el = document.createElement('div');
+    el.className = 'floating-element';
+    el.innerHTML = visualElements[Math.floor(Math.random() * visualElements.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (16 + Math.random() * 20) + 'px';
+    
+    const dynamicDrift = (Math.random() - 0.5) * 80;
+    const dynamicSpin = (Math.random() - 0.5) * 360;
+    el.style.setProperty('--drift', `${dynamicDrift}px`);
+    el.style.setProperty('--spin', `${dynamicSpin}deg`);
+    
+    const duration = 5 + Math.random() * 4;
+    el.style.animationDuration = duration + 's';
+
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), duration * 1000);
+}
+
+// Low frequency floaters as background ambiance
+setInterval(spawnFloatingElement, 1000);
 </script>
 
 </body>
