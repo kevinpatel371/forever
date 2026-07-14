@@ -162,6 +162,92 @@ p {
     opacity: 0;
 }
 
+/* --- Interactive Envelope --- */
+.envelope-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 180px;
+    background: #fcf8eb;
+    border: 1px solid rgba(177, 142, 64, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 15px 30px rgba(74, 59, 50, 0.08);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.envelope.open {
+    height: auto;
+    min-height: 250px;
+    background: #ffffff;
+    border-color: rgba(177, 142, 64, 0.15);
+    padding: 25px;
+    cursor: default;
+}
+
+/* Wax Seal style */
+.wax-seal {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #b83535 0%, #801313 100%);
+    border-radius: 50%;
+    box-shadow: 0 6px 15px rgba(128, 19, 19, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f7eebc;
+    font-size: 1.4rem;
+    z-index: 10;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+}
+
+.envelope.open .wax-seal {
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.envelope-prompt {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8b7355;
+    position: absolute;
+    bottom: 25px;
+    transition: opacity 0.4s ease;
+}
+
+.envelope.open .envelope-prompt {
+    opacity: 0;
+}
+
+/* Hidden Letter content */
+.secret-letter {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+    text-align: left;
+    display: none;
+}
+
+.envelope.open .secret-letter {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* --- Final Proposal Buttons --- */
 .final-question {
     font-family: 'Cormorant Garamond', serif;
@@ -224,6 +310,9 @@ p {
 
 <body>
 
+<!-- Continuous Audio Sync Tag -->
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
 <div class="container">
 
     <!-- Header Panel -->
@@ -237,12 +326,12 @@ p {
         <div class="section-label"><span>💕</span> How We Met</div>
         <p>
             On April 30, a simple Snapchat connection became the beginning
-            of something beautiful.[cite: 2]
+            of something beautiful.
             <br><br>
             What started as a conversation slowly turned into countless
-            memories, laughter, happiness, and moments that I will always cherish.[cite: 2]
+            memories, laughter, happiness, and moments that I will always cherish.
             <br><br>
-            Thank you for being part of my life.[cite: 2]
+            Thank you for being part of my life.
         </p>
         <div class="counter-box">
             <span class="counter-number" id="daysCounter">0</span>
@@ -278,25 +367,47 @@ p {
     <div class="section-panel">
         <div class="section-label"><span>💌</span> A Message For You</div>
         <p>
-            Happy 25th Birthday, Nisu ❤️[cite: 2]
+            Happy 25th Birthday, Nisu ❤️
             <br><br>
-            You are one of the most special people in my life.[cite: 2]
+            You are one of the most special people in my life.
             <br><br>
             Thank you for every smile, every conversation,
-            every laugh, and every memory we have shared.[cite: 2]
+            every laugh, and every memory we have shared.
             <br><br>
             I hope this year brings you happiness,
-            success, good health, and everything you dream of.[cite: 2]
+            success, good health, and everything you dream of.
             <br><br>
             No matter where life takes us,
-            you will always have a special place in my heart.[cite: 2]
+            you will always have a special place in my heart.
         </p>
+    </div>
+
+    <!-- NEW INTERACTIVE SECRET NOTE SECTION -->
+    <div class="section-panel">
+        <div class="section-label"><span>🔒</span> For Your Eyes Only</div>
+        <p style="font-size: 0.8rem; margin-bottom: 15px; font-style: italic; color: #b18e40;">Break the seal to read the secret message</p>
+        
+        <div class="envelope-wrapper">
+            <div class="envelope" id="secretEnvelope" onclick="openEnvelope()">
+                <div class="wax-seal">👑</div>
+                <div class="envelope-prompt">Tap to open</div>
+                
+                <div class="secret-letter">
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.15rem; color: #261c17; line-height: 1.8;">
+                        Nisu,<br><br>
+                        Writing this reminds me of how incredibly lucky I am. Among all the people in the world, our paths crossed in the sweetest way, and you became my absolute favorite chapter.<br><br>
+                        You make even the quietest days feel incredibly bright and meaningful. Thank you for just being you—genuine, beautiful, and rare.<br><br>
+                        — Yours ❤️
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Final Proposal Panel with Redirect Trigger -->
     <div class="section-panel" id="proposalPanel">
         <div class="final-question">
-            Will you keep making beautiful memories with me forever?[cite: 2]
+            Will you keep making beautiful memories with me forever?
         </div>
         <div class="btn-row">
             <button class="response-btn" onclick="celebrateAndRedirect()">Yes</button>
@@ -307,6 +418,33 @@ p {
 </div>
 
 <script>
+// --- Envelope Interaction ---
+function openEnvelope() {
+    const envelope = document.getElementById('secretEnvelope');
+    if (!envelope.classList.contains('open')) {
+        envelope.classList.add('open');
+    }
+}
+
+// --- Music Synchronization ---
+const audio = document.getElementById('bgMusic');
+
+window.addEventListener('DOMContentLoaded', () => {
+    const isPlaying = localStorage.getItem('musicPlaying');
+    const savedTime = localStorage.getItem('musicTime');
+    if (isPlaying === 'true') {
+        if (savedTime) audio.currentTime = parseFloat(savedTime);
+        audio.play().catch(() => {});
+    }
+});
+
+// Continuously save audio playhead position
+setInterval(() => {
+    if (!audio.paused) {
+        localStorage.setItem('musicTime', audio.currentTime);
+    }
+}, 500);
+
 function calculateDays() {
     const startDate = new Date('2024-04-30'); 
     const today = new Date();
@@ -341,7 +479,8 @@ function celebrateAndRedirect() {
         setTimeout(() => particle.remove(), 1500);
     }
 
-    // Direct her to the mini game page after a quick delay for the confetti burst effect
+    // Pass the play state to next page, then redirect
+    localStorage.setItem('musicTime', audio.currentTime);
     setTimeout(() => {
         window.location.href = 'hunt.html';
     }, 1000);
