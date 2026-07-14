@@ -60,7 +60,7 @@ body {
     letter-spacing: 5px;
     color: #b18e40;
     opacity: 0;
-    animation: fadeInUp Mobile 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    animation: fadeInUpMobile 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
 }
 
 .center-bow {
@@ -163,6 +163,9 @@ h1 span {
 
 <body>
 
+<!-- Hidden Audio Element -->
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
 <!-- Ambient Backdrops to soften user screen lighting -->
 <div class="ambient-glow" style="width: 300px; height: 300px; top: -5%; left: -10%;"></div>
 <div class="ambient-glow" style="width: 400px; height: 400px; bottom: -10%; right: -10%;"></div>
@@ -178,7 +181,7 @@ h1 span {
     <h1>Happy Birthday,<br>Nisu. <span>Twenty-Five beautiful years.</span></h1>
 
     <div class="action-zone">
-        <button class="luxury-btn" onclick="window.location.href='surprise.html'">
+        <button class="luxury-btn" onclick="startExperience()">
             Begin Experience &rarr;
         </button>
     </div>
@@ -186,6 +189,27 @@ h1 span {
 </div>
 
 <script>
+const audio = document.getElementById('bgMusic');
+
+function startExperience() {
+    // Start music on first tap so browser allows playback, then proceed
+    audio.play().then(() => {
+        localStorage.setItem('musicPlaying', 'true');
+        localStorage.setItem('musicTime', audio.currentTime);
+        window.location.href = 'surprise.html';
+    }).catch(() => {
+        localStorage.setItem('musicPlaying', 'true');
+        window.location.href = 'surprise.html';
+    });
+}
+
+// Track audio time
+setInterval(() => {
+    if (!audio.paused) {
+        localStorage.setItem('musicTime', audio.currentTime);
+    }
+}, 500);
+
 // Array containing the requested ribbons, hearts, and bows
 const visualElements = ['💝', '🎀', '❤️', '✨'];
 
