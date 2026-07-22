@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Birthday Nisu ❤️</title>
+
+<!-- Editorial fonts optimized for beautiful mobile scaling -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent; /* Clean touch interface on mobile */
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Soft premium butter-yellow matte canvas */
+    background: radial-gradient(circle at 50% 30%, #fffdf4 0%, #f7eebc 100%);
+    font-family: 'Montserrat', sans-serif;
+    color: #4a3b32;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- Mobile Editorial Screen Layout --- */
+.mobile-hero {
+    width: 85%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    z-index: 5;
+}
+
+/* --- Top Section --- */
+.top-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.sub-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: #b18e40;
+    opacity: 0;
+    animation: fadeInUpMobile 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+.center-bow {
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: fadeInUpMobile 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+}
+
+/* --- Core Beautiful Headline --- */
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.2rem;
+    font-weight: 400;
+    line-height: 1.15;
+    font-style: italic;
+    color: #261c17;
+    margin: auto 0;
+    opacity: 0;
+    animation: fadeInUpMobile 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+}
+
+h1 span {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 3px;
+    margin-top: 15px;
+    color: #6a5345;
+    text-transform: uppercase;
+}
+
+/* --- Bottom Interactive Mobile Zone --- */
+.action-zone {
+    width: 100%;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeInUpMobile 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+}
+
+/* Premium Mobile Fluid Button */
+.luxury-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 18px 0;
+    background: #261c17;
+    color: #f7eebc;
+    border: none;
+    border-radius: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    box-shadow: 0 10px 30px rgba(38, 28, 23, 0.15);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Elegant tap feedback response */
+.luxury-btn:active {
+    transform: scale(0.97);
+    background: #4a3b32;
+    box-shadow: 0 5px 15px rgba(38, 28, 23, 0.1);
+}
+
+/* --- Soft Glowing Fluid Backdrops --- */
+.ambient-glow {
+    position: absolute;
+    background: radial-gradient(circle, rgba(255,248,220,0.9) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- Floating Ribbon & Heart Elements --- */
+.floating-element {
+    position: fixed;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    animation: microFloat 8s linear infinite;
+}
+
+/* --- Animations --- */
+@keyframes fadeInUpMobile {
+    0% { opacity: 0; transform: translateY(25px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes microFloat {
+    0% { transform: translateY(105vh) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Hidden Audio Element -->
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<!-- Ambient Backdrops to soften user screen lighting -->
+<div class="ambient-glow" style="width: 300px; height: 300px; top: -5%; left: -10%;"></div>
+<div class="ambient-glow" style="width: 400px; height: 400px; bottom: -10%; right: -10%;"></div>
+
+<!-- Main Mobile Experience Layout -->
+<div class="mobile-hero">
+    
+    <div class="top-meta">
+        <div class="sub-title">A Chapter For You</div>
+        <div class="center-bow">🎀</div>
+    </div>
+
+    <h1>Happy Birthday,<br>Nisu. <span>Twenty-Five beautiful years.</span></h1>
+
+    <div class="action-zone">
+        <button class="luxury-btn" onclick="startExperience()">
+            Begin Experience &rarr;
+        </button>
+    </div>
+
+</div>
+
+<script>
+const audio = document.getElementById('bgMusic');
+
+function startExperience() {
+    // Start music on first tap so browser allows playback, then proceed
+    audio.play().then(() => {
+        localStorage.setItem('musicPlaying', 'true');
+        localStorage.setItem('musicTime', audio.currentTime);
+        window.location.href = 'surprise.html';
+    }).catch(() => {
+        localStorage.setItem('musicPlaying', 'true');
+        window.location.href = 'surprise.html';
+    });
+}
+
+// Track audio time
+setInterval(() => {
+    if (!audio.paused) {
+        localStorage.setItem('musicTime', audio.currentTime);
+    }
+}, 500);
+
+// Array containing the requested ribbons, hearts, and bows
+const visualElements = ['💝', '🎀', '❤️', '✨'];
+
+function spawnFloatingElement() {
+    const el = document.createElement('div');
+    el.className = 'floating-element';
+    
+    // Pick a random element from our aesthetic collection
+    el.innerHTML = visualElements[Math.floor(Math.random() * visualElements.length)];
+    
+    // Distribute randomly across phone viewport width
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (16 + Math.random() * 12) + 'px';
+    
+    // Custom drift variations so they move independently and beautifully
+    const dynamicDrift = (Math.random() - 0.5) * 60;
+    const dynamicSpin = (Math.random() - 0.5) * 360;
+    el.style.setProperty('--drift', `${dynamicDrift}px`);
+    el.style.setProperty('--spin', `${dynamicSpin}deg`);
+    
+    // Stagger speeds so it looks natural
+    const duration = 6 + Math.random() * 4;
+    el.style.animationDuration = duration + 's';
+
+    document.body.appendChild(el);
+
+    // Clean up nodes after completion
+    setTimeout(() => {
+        el.remove();
+    }, duration * 1000);
+}
+
+// Generate an element every 700ms to keep it elegant and uncluttered on mobile screens
+setInterval(spawnFloatingElement, 700);
+</script>
+
+</body>
+</html>
